@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Javascript name="verify-hardcoded-api-key" timeLimit="200" memoryLimit="50">
+    <DisplayName>Verify Hardcoded API Key</DisplayName>
+    <Properties>
+        <Property name="hardcoded.api.key">{hardcoded.api.key}</Property>
+    </Properties>
+    <IncludeURL>jsc://verify-hardcoded-api-key.js</IncludeURL>
+</Javascript> 

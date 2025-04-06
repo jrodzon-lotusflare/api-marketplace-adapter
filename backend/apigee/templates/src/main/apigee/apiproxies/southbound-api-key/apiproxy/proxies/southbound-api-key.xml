@@ -1,0 +1,8 @@
+<ProxyEndpoint name="southbound-api-key">
+  <HTTPProxyConnection>
+    <BasePath>{proxy.basepath}</BasePath>
+  </HTTPProxyConnection>
+  <RouteRule name="default-route">
+    <TargetEndpoint>southbound-api-key</TargetEndpoint>
+  </RouteRule>
+</ProxyEndpoint>

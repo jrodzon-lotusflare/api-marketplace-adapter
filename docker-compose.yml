@@ -38,3 +38,25 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s 
+
+  wiremock:
+    container_name: wiremock
+    image: wiremock/wiremock:3.12.1
+    ports:
+      - "19080:8080"
+    volumes:
+      - ./wiremock-config:/home/wiremock
+    depends_on:
+      - backend
+      - frontend
+
+  apigee-emulator:
+    container_name: apigee-emulator
+    image: gcr.io/apigee-release/hybrid/apigee-emulator:1.9.2
+    ports:
+      - "18080:8080"
+      - "18998:8998"
+    depends_on:
+      - backend
+      - frontend
+    restart: always

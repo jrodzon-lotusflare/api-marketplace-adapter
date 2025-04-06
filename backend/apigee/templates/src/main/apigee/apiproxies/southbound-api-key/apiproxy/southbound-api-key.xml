@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy name="southbound-api-key" revision="1" description="API proxy template that adds a predefined API key to requests and forwards them to a target endpoint">
+    <ConfigurationVersion majorVersion="4" minorVersion="0"/>
+    <Description>API proxy template that adds a predefined API key to requests and forwards them to a target endpoint. Useful for scenarios where you need to authenticate requests to external services with an API key.</Description>
+    <DisplayName>Southbound API Key Proxy</DisplayName>
+    <Policies>
+        <Policy>set-api-key</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>southbound-api-key</ProxyEndpoint>
+    </ProxyEndpoints>
+    <Spec/>
+    <TargetEndpoints>
+        <TargetEndpoint>southbound-api-key</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy> 

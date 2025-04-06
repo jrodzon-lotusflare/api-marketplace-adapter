@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy name="northbound-api-key" revision="1" description="API proxy template that verifies a predefined API key in requests and forwards them to a target endpoint">
+    <ConfigurationVersion majorVersion="4" minorVersion="0"/>
+    <Description>API proxy template that verifies a predefined API key in requests and forwards them to a target endpoint. Useful for scenarios where you need to authenticate client requests with an API key.</Description>
+    <DisplayName>Northbound API Key Proxy</DisplayName>
+    <Policies>
+        <Policy>verify-hardcoded-api-key</Policy>
+        <Policy>error-response</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>northbound-api-key</ProxyEndpoint>
+    </ProxyEndpoints>
+    <Spec/>
+    <TargetEndpoints>
+        <TargetEndpoint>northbound-api-key</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy> 

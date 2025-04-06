@@ -1,0 +1,12 @@
+<TargetEndpoint name="southbound-api-key">
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>set-api-key</Name>
+      </Step>
+    </Request>
+  </PreFlow>
+  <HTTPTargetConnection>
+    <URL>{target.url}</URL>
+  </HTTPTargetConnection>
+</TargetEndpoint>

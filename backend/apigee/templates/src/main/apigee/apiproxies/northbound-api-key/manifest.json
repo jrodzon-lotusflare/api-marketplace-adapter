@@ -1,0 +1,22 @@
+{
+  "name": "northbound-api-key",
+  "description": "API proxy template that verifies a predefined API key in requests and forwards them to a target endpoint. Useful for scenarios where you need to authenticate client requests with an API key.",
+  "parameters": [
+    {
+      "name": "target.url",
+      "description": "The URL of the target endpoint where requests should be forwarded. This should be the complete URL including protocol (http/https).",
+      "required": true
+    },
+    {
+      "name": "hardcoded.api.key",
+      "description": "The API key that will be used to validate incoming requests. Requests must include this key in the X-API-Key header to be accepted.",
+      "required": true
+    },
+    {
+      "name": "proxy.basepath",
+      "description": "The base path for the API proxy endpoint. This determines the URL path where the proxy will be accessible. Should start with a forward slash.",
+      "required": true,
+      "default": "/northbound-api-key"
+    }
+  ]
+} 

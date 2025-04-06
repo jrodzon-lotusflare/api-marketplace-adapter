@@ -1,0 +1,22 @@
+{
+  "name": "southbound-api-key",
+  "description": "API proxy template that adds a predefined API key to requests and forwards them to a target endpoint. Useful for scenarios where you need to authenticate requests to external services with an API key.",
+  "parameters": [
+    {
+      "name": "target.url",
+      "description": "The URL of the target endpoint where requests should be forwarded. This should be the complete URL including protocol (http/https).",
+      "required": true
+    },
+    {
+      "name": "api.key",
+      "description": "The API key that will be added as an X-API-Key header to each request. This key will be used to authenticate with the target service.",
+      "required": true
+    },
+    {
+      "name": "proxy.basepath",
+      "description": "The base path for the API proxy endpoint. This determines the URL path where the proxy will be accessible. Should start with a forward slash.",
+      "required": true,
+      "default": "/southbound-api-key"
+    }
+  ]
+} 

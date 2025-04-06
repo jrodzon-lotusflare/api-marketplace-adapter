@@ -1,0 +1,28 @@
+<ProxyEndpoint name="northbound-api-key">
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>verify-hardcoded-api-key</Name>
+      </Step>
+    </Request>
+  </PreFlow>
+  <HTTPProxyConnection>
+    <BasePath>{proxy.basepath}</BasePath>
+  </HTTPProxyConnection>
+  <RouteRule name="default-route">
+    <TargetEndpoint>northbound-api-key</TargetEndpoint>
+  </RouteRule>
+  <FaultRules>
+    <FaultRule name="APIKeyValidationFault">
+        <Step>
+            <Name>error-response</Name>
+        </Step>
+        <Condition>(fault.name = "APIKeyValidationFault")</Condition>
+    </FaultRule>
+</FaultRules>
+<DefaultFaultRule name="DefaultFaultRule">
+    <Step>
+        <Name>error-response</Name>
+    </Step>
+</DefaultFaultRule> 
+</ProxyEndpoint>

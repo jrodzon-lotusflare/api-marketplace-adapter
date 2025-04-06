@@ -1,0 +1,209 @@
+openapi: 3.0.3
+info:
+  title: Vonage Number Verification API
+  x-metaTitle: Vonage Number Verification v.0 API Reference | Vonage API Documentation
+  x-metaDescription: Find quick answers to questions about the Vonage Number
+    Verification API in this reference guide. Learn more in Vonage's API
+    documentation.
+  description: >
+    [The Number Verification API](/number-verification/overview) helps you
+    verify the phone number associated with the SIM used in the device connected
+    to the mobile data network.
+
+
+    > This API is based on the Camara NumberVerification v.0.3.1
+    <https://github.com/camaraproject/NumberVerification/releases/tag/v0.3.1>
+
+
+    > Please note: If you are using the Number Verification API in Germany, you
+    must include specific wording in your application to gain consent for IP
+    matching and processing. See [here](/number-verification/technical-details)
+    for more information.
+  version: 0.3.1
+  termsOfService: https://www.vonage.com/legal/communications-apis/terms-of-use/
+  contact:
+    name: Vonage Developer Relations
+    email: devrel@vonage.com
+    url: https://developer.vonage.com/
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: https://api-eu.vonage.com/camara/number-verification/v031
+paths:
+  /verify:
+    post:
+      operationId: verifyNumberVerification
+      tags:
+        - Phone number verify
+      summary: Phone number verify
+      description: >
+        Verifies if the specified phone number (plain text or hashed format)
+        matches the one that the user is currently using. The number
+        verification will be done for the user that has authenticated via mobile
+        network.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NumberVerificationRequestBody"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NumberVerificationMatchResponse"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/PhoneNumberVerificationPermissionDenied403"
+        "502":
+          $ref: "#/components/responses/Generic502"
+      security:
+        - three_legged:
+            - number-verification-verify-read
+components:
+  securitySchemes:
+    three_legged:
+      type: oauth2
+      description: |
+        For detailed information on authentication with the Number Verification API, please refer to our [authentication guide](/getting-started-network/guides/client-authentication?source=number-verification).
+      flows:
+        authorizationCode:
+          scopes:
+            openid dpv:FraudPreventionAndDetection#number-verification-verify-read: Phone number verify and share
+  schemas:
+    NumberVerificationRequestBody:
+      type: object
+      description: Payload to verify the phone number
+      oneOf:
+        - $ref: "#/components/schemas/PhoneNumber"
+        - $ref: "#/components/schemas/HashedPhoneNumber"
+    PhoneNumber:
+      description: Phone number
+      type: object
+      properties:
+        phoneNumber:
+          description: A phone number belonging to the user in **E.164 format (starting
+            with country code)**. Optionally prefixed with '+'.
+          type: string
+          example: "+34123456789"
+      required:
+        - phoneNumber
+    HashedPhoneNumber:
+      description: Hashed phone number
+      type: object
+      properties:
+        hashedPhoneNumber:
+          description: Hashed phone number. SHA-256 (in hexadecimal representation) of the
+            mobile phone number in **E.164 format (starting with country
+            code)**. Optionally prefixed with '+'.
+          type: string
+          example: 32f67ab4e4312618b09cd23ed8ce41b13e095fe52b73b2e8da8ef49830e50dba
+    NumberVerificationMatchResponse:
+      type: object
+      description: Number verification result
+      required:
+        - devicePhoneNumberVerified
+      properties:
+        devicePhoneNumberVerified:
+          $ref: "#/components/schemas/DevicePhoneNumberVerified"
+    NumberVerificationShareResponse:
+      type: object
+      description: Number verification share result
+      required:
+        - devicePhoneNumber
+      properties:
+        devicePhoneNumber:
+          $ref: "#/components/schemas/DevicePhoneNumber"
+    DevicePhoneNumber:
+      description: The device phone number associated to the access token in **E.164
+        format (starting with country code)**. Optionally prefixed with '+'.
+      type: string
+      example: "+34123456789"
+    DevicePhoneNumberVerified:
+      description: Number verification. True, if it matches
+      type: boolean
+    ErrorInfo:
+      type: object
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          description: HTTP response status code
+        code:
+          type: string
+          description: Code given to this error
+        message:
+          type: string
+          description: Detailed error description
+  responses:
+    Generic400:
+      description: Problem with the client request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 400
+            code: INVALID_ARGUMENT
+            message: Client specified an invalid argument, request body or query param
+    Generic401:
+      description: Authentication problem with the client request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 401
+            code: UNAUTHENTICATED
+            message: Request not authenticated due to missing, invalid, or expired
+              credentials
+    PhoneNumberVerificationPermissionDenied403:
+      description: >
+        Client does not have sufficient permission.
+
+        In addition to regular scenario of `PERMISSION_DENIED`, other scenarios
+        may exist:
+          - Client authentication was not via mobile network. In order to check the authentication method, AMR parameter value in the 3-legged user's access token can be used and make sure that the authentication was not either by SMS+OTP nor username/password (`{"code": "NUMBER_VERIFICATION.USER_NOT_AUTHENTICATED_BY_MOBILE_NETWORK","message": "Client must authenticate via the mobile network to use this service"}`)
+          - Phone number cannot be deducted from access token context.(`{"code": "NUMBER_VERIFICATION.INVALID_TOKEN_CONTEXT","message": "Phone number cannot be deducted from access token context"}`)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          examples:
+            PermissionDenied:
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action
+            UserNotAuthenticatedByMobileNetwork:
+              value:
+                status: 403
+                code: NUMBER_VERIFICATION.USER_NOT_AUTHENTICATED_BY_MOBILE_NETWORK
+                message: Client must authenticate via the mobile network to use this service
+            InvalidTokenContext:
+              value:
+                status: 403
+                code: NUMBER_VERIFICATION.INVALID_TOKEN_CONTEXT
+                message: Phone number cannot be deducted from access token context
+    Generic502:
+      description: Bad Gateway
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInfo"
+          example:
+            status: 502
+            code: INTERNAL
+            message: Bad Gateway
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/NumberVerification

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage name="error-response">
+    <Set>
+        <Payload contentType="application/json">
+            {
+                "error": {
+                    "code": "{error.status.code}",
+                    "message": "{error.message}"
+                }
+            }
+        </Payload>
+        <StatusCode>{error.status.code}</StatusCode>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage> 

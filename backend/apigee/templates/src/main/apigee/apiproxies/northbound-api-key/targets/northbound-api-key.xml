@@ -1,0 +1,5 @@
+<TargetEndpoint name="northbound-api-key">
+  <HTTPTargetConnection>
+    <URL>{target.url}</URL>
+  </HTTPTargetConnection>
+</TargetEndpoint>

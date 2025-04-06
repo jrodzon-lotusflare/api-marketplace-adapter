@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage name="set-api-key">
+    <Add>
+        <Headers>
+            <Header name="X-API-Key">{api.key}</Header>
+        </Headers>
+    </Add>
+</AssignMessage>

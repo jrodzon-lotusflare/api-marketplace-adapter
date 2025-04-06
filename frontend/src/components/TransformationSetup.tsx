@@ -35,11 +35,20 @@ interface ApiConfig {
   outputApi: string;
   outputApiSpec: (File | { url: string; name?: string; repo?: string }) | null;
   mockResponse?: {
-    request_converter: string;
-    response_converter: string;
-    rq_test_data: string;
-    rs_test_data: string;
-  };
+    request_converter?: string;
+    response_converter?: string;
+    rq_test_data?: string;
+    rs_test_data?: string;
+    inputApi?: string;
+    outputApi?: string;
+    interfaces?: string;
+    explanation?: string;
+  } | null;
+  transformationPrompt?: string;
+  testResults?: any;
+  executed?: boolean;
+  deploymentConfig?: string | null;
+  deployed?: boolean;
 }
 
 interface TransformationSetupProps {
