@@ -20,8 +20,8 @@ A React application that helps configure and transform API requests between diff
 
 1. Clone the repository
    ```sh
-   git clone https://github.com/yourusername/api-configurator.git
-   cd api-configurator
+   git clone https://github.com/jrodzon-lotusflare/api-marketplace-adapter.git
+   cd frontend
    ```
 
 2. Install dependencies

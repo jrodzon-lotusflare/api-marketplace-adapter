@@ -157,7 +157,7 @@ const TransformationSetup: React.FC<TransformationSetupProps> = ({
       console.log(`Output content length: ${outputContent.length}`);
 
       // Make a single request to /transform with both input and output
-      const response = await fetch('http://localhost:5555/transform', {
+      const response = await fetch('http://backend:5555/transform', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
