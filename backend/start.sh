@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Create the Apigee templates directory if it doesn't exist
+mkdir -p /app/apigee/templates
+
+# Copy the Apigee templates to the correct location
+if [ -d "/app/backend/apigee/templates" ]; then
+  echo "Copying Apigee templates from /app/backend/apigee/templates to /app/apigee/templates"
+  cp -r /app/backend/apigee/templates/* /app/apigee/templates/
+elif [ -d "/app/apigee/templates" ]; then
+  echo "Apigee templates already in the correct location"
+else
+  echo "Warning: Apigee templates not found"
+fi
+
 # Check if .env file exists, if not create from example
 if [ ! -f .env ]; then
     echo "Creating .env file from .env.example..."
@@ -24,4 +37,4 @@ fi
 
 # Run the application
 echo "Starting API Marketplace Adapter..."
-python -m api_marketplace_adapter 
+python -m api_marketplace_adapter

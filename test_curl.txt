@@ -1,0 +1,12 @@
+curl -X POST --data '{ \
+    "route": "/example", \
+    "authType": "apiKey", \
+    "apiKey": "abc", \
+    "targetBaseUrl": "wiremockEndpointUrl", \
+    "targetAuthType": "apiKey", \
+    "targetApiKey": "abc", \
+    "request_converter": "JS script", \
+    "response_converter": "JS script" \
+}' \
+-H "Content-Type: application/json" \
+http://localhost:5555/merge-apiproxy

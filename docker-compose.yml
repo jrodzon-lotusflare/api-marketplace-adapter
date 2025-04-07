@@ -13,8 +13,10 @@ services:
       - PORT=5555
       - DEBUG=False
       - LOG_LEVEL=INFO
+      - APIGEE_TEMPLATES_PATH=/app/apigee/templates
     volumes:
       - ./backend/logs:/app/logs
+      - ./backend/apigee/templates:/app/apigee/templates
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5555/health"]

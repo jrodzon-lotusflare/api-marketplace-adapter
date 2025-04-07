@@ -252,3 +252,90 @@ api-marketplace-adapter/
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Merging Apigee API Proxy Templates
+
+The API Marketplace Adapter provides an endpoint to merge the northbound-api-key and southbound-api-key templates into a single API proxy template. This is useful for creating a complete API proxy that handles both the northbound and southbound API key authentication.
+
+### Docker Configuration
+
+The Apigee templates are mounted as a volume in the Docker container. This ensures that the templates are available at runtime. The following changes have been made to support this:
+
+1. The `docker-compose.yml` file has been updated to mount the Apigee templates directory:
+   ```yaml
+   volumes:
+     - ./backend/logs:/app/logs
+     - ./backend/apigee/templates:/app/apigee/templates
+   ```
+
+2. The `start.sh` script has been updated to copy the Apigee templates to the correct location in the container:
+   ```bash
+   # Create the Apigee templates directory if it doesn't exist
+   mkdir -p /app/apigee/templates
+
+   # Copy the Apigee templates to the correct location
+   if [ -d "/app/backend/apigee/templates" ]; then
+     echo "Copying Apigee templates from /app/backend/apigee/templates to /app/apigee/templates"
+     cp -r /app/backend/apigee/templates/* /app/apigee/templates/
+   elif [ -d "/app/apigee/templates" ]; then
+     echo "Apigee templates already in the correct location"
+   else
+     echo "Warning: Apigee templates not found"
+   fi
+   ```
+
+3. The `app.py` file has been updated to use the environment variable for the Apigee templates path:
+   ```python
+   APIGEE_TEMPLATES_PATH = os.environ.get("APIGEE_TEMPLATES_PATH", os.path.join(os.path.dirname(os.path.dirname(__file__)), "apigee", "templates", "src", "main", "apigee", "apiproxies"))
+   ```
+
+### Using the Merge API Proxy Endpoint
+
+To merge the northbound-api-key and southbound-api-key templates, send a POST request to the `/merge-apiproxy` endpoint with the following JSON body:
+
+```json
+{
+    "route": "/example",
+    "authType": "apiKey",
+    "apiKey": "abc",
+    "targetBaseUrl": "wiremockEndpointUrl",
+    "targetAuthType": "apiKey",
+    "targetApiKey": "abc",
+    "request_converter": "JS script",
+    "response_converter": "JS script"
+}
+```
+
+The endpoint will return a zip file containing the merged API proxy template. The zip file follows the Apigee emulator format structure.
+
+### Required Parameters
+
+- `route`: The base path for the API proxy
+- `authType`: The authentication type for the northbound API (currently only "apiKey" is supported)
+- `apiKey`: The API key for the northbound API
+- `targetBaseUrl`: The base URL for the target API
+- `targetAuthType`: The authentication type for the target API (currently only "apiKey" is supported)
+- `targetApiKey`: The API key for the target API
+
+### Optional Parameters
+
+- `request_converter`: A JavaScript script to convert the request from the northbound API to the target API
+- `response_converter`: A JavaScript script to convert the response from the target API to the northbound API
+
+### Example
+
+```bash
+curl -X POST http://localhost:5555/merge-apiproxy \
+  -H "Content-Type: application/json" \
+  -d '{
+    "route": "/example",
+    "authType": "apiKey",
+    "apiKey": "abc",
+    "targetBaseUrl": "http://wiremock:8080",
+    "targetAuthType": "apiKey",
+    "targetApiKey": "xyz",
+    "request_converter": "// Request converter script",
+    "response_converter": "// Response converter script"
+  }' \
+  --output merged-apiproxy.zip
+```

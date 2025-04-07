@@ -1,7 +1,7 @@
 {
   "proxies": [
     {
-      "name": "southbound-api-key"
+      "name": "{deployment.name}"
     }
   ],
   "sharedflows": []
